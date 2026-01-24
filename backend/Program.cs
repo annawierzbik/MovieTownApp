@@ -59,14 +59,12 @@ builder.Services.AddControllers();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowFrontend",
-        policy =>
-        {
-            policy
-                .WithOrigins("http://localhost") 
-                .AllowAnyHeader()
-                .AllowAnyMethod();
-        });
+    options.AddPolicy("AllowEverything", policy =>
+    {
+        policy.AllowAnyOrigin() 
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
 });
 
 var app = builder.Build();
@@ -118,7 +116,7 @@ using (var scope = app.Services.CreateScope())
 
 app.UseRouting();
 
-app.UseCors("AllowFrontend");
+app.UseCors("AllowEverything");
 
 app.UseAuthentication();
 app.UseAuthorization();
