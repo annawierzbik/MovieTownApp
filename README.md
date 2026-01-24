@@ -1,92 +1,82 @@
-# Empty
+# 🎬 MovieTown App
+
+![Status](https://img.shields.io/badge/Status-Live-success?style=for-the-badge)
+![Tech](https://img.shields.io/badge/Stack-Fullstack-pink?style=for-the-badge)
+
+**MovieTown** is a high-end cinema ticket booking platform featuring a dark, futuristic aesthetic. Built with a modern full-stack architecture, it provides a seamless experience for moviegoers and a robust management suite for administrators.
+
+
+## ✨ Key Features
+
+### 👤 For Users
+- **Interactive Booking:** A specialized Grid UI for real-time seat selection in various cinema halls.
+- **Dynamic Content:** Browse upcoming screenings, movie details, and genres.
+- **Personal Profile:** Manage account details and view a complete history of personal reservations.
+- **Secure Authentication:** Robust login and registration system powered by **JWT (JSON Web Tokens)**.
+
+### 🛡️ For Administrators
+- **Screening Management:** Full CRUD operations for managing the cinema's schedule with animated confirmation modals.
+- **User Administration:** Manage the workforce, change user roles (User/Admin), and edit personnel records.
+- **Concurrency Control:** Implementation of **Optimistic Concurrency** using PostgreSQL's `xmin` to prevent data conflicts between multiple admins.
 
 
 
-## Getting started
+## 🛠️ Technical Stack
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+### **Frontend**
+- **React 18** with **TypeScript** for type-safe development.
+- **Tailwind CSS** for the futuristic utility-first styling.
+- **Framer Motion** for smooth, high-performance animations and modals.
+- **Lucide React** for consistent, modern iconography.
+- **React Router Dom** for lightning-fast SPA navigation.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+### **Backend**
+- **.NET 9 (ASP.NET Core API)** – High-performance backend services.
+- **Entity Framework Core** – ORM for efficient database communication.
+- **PostgreSQL** – Reliable, production-ready relational database.
+- **BCrypt.Net** – Industrial-strength password hashing.
+- **Docker** – Containerization for consistent deployment environments.
 
-## Add your files
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
 
-```
-cd existing_repo
-git remote add origin https://gitlab-stud.elka.pw.edu.pl/wgr/empty.git
-git branch -M main
-git push -uf origin main
-```
 
-## Integrate with your tools
+## 🚀 Getting Started
 
-- [ ] [Set up project integrations](https://gitlab-stud.elka.pw.edu.pl/wgr/empty/-/settings/integrations)
+### Prerequisites
+- **Node.js** (v18 or higher)
+- **.NET 9 SDK**
+- **Docker & Docker Compose** (optional, for local database)
 
-## Collaborate with your team
+### Environment Setup 🔑
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+1. **Root Directory (`/.env`):**
+Used by Docker Compose to set up infrastructure.
+- `DB_PASSWORD`: Password for the PostgreSQL container.
+- `JWT_SECRET`: Secret key for token generation (min. 32 chars).
 
-## Test and Deploy
+2. **Frontend Directory (`/frontend/.env`):**
+Used by React to connect to the API.
+- `REACT_APP_API_URL`: URL of your running backend (e.g., `http://localhost:5000` for local dev or your Render URL).
 
-Use the built-in continuous integration in GitLab.
+### Installation & Local Setup
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/annawierzbik/MovieTownApp.git](https://github.com/annawierzbik/MovieTownApp.git)
+   cd MovieTownApp
+   
+2. **Run Application (Docker):**
+   ```bash
+     docker-compose up -d
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+3. **Access Application at:**
+- Frontend: http://localhost
+- Backend: http://localhost/api
 
-***
+  
+## 🌐 Deployment
+The application is fully deployed and can be accessed via the following link:
 
-# Editing this README
+Live Frontend: https://movie-town-frontend.onrender.com
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+## 📝 Author
+Anna Wierzbik Developed as a final project for the "Narzędzia Typu RAD" course.
