@@ -8,7 +8,7 @@ import { TitleSection } from "../components/TitleSection";
 
 export const LandingPage = () => {
   return (
-    <div className="bg-gradient-to-br from-slate-950 via-slate-900 text-pink-500 font-sans overflow-x-hidden">
+    <div className=" text-pink-500 font-sans overflow-x-hidden">
       <Navbar />
 
       <TitleSection />

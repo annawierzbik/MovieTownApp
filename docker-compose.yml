@@ -1,0 +1,39 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: movie_db
+    restart: always
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=movietown
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./Backend
+    container_name: movie_api
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=db;Database=movietown;Username=admin;Password=${DB_PASSWORD}
+      - Jwt__Key=${JWT_SECRET}
+      - ASPNETCORE_URLS=http://+:5000
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./Frontend
+      args:
+        - VITE_API_URL=${VITE_API_URL}
+    container_name: movie_web
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

@@ -6,7 +6,7 @@ import { LaserBackground } from "../components/LaserBackgroundHoriztontal";
 
 export const Profile = () => {
   return (
-    <div className="bg-black text-pink-500 font-sans overflow-x-hidden p-3">
+    <div className=" bg-[#050505] text-pink-500 font-sans overflow-x-hidden p-3 mt-10">
       <Navbar />
       <LaserBackground />
       <UpdateMeForm />
