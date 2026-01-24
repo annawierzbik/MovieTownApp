@@ -1,5 +1,14 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Film, Trash2, Loader2, Plus, X, Ticket, Activity } from "lucide-react";
+import {
+  Film,
+  Trash2,
+  Loader2,
+  Plus,
+  X,
+  Ticket,
+  Activity,
+  AlertTriangle,
+} from "lucide-react";
 import { AuthContext } from "../context/AuthContext";
 import { CreateScreeningForm } from "../components/CreateScreeningForm";
 import { Navbar } from "../components/Navbar";
@@ -8,18 +17,31 @@ import { ScreeningCard } from "../components/ScreeningCard";
 import { motion, AnimatePresence } from "framer-motion";
 
 export const Screenings: React.FC = () => {
-  const API_URL = process.env.REACT_APP_API_URL;
+  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
   const authContext = useContext(AuthContext) as any;
   const { token, role } = authContext;
 
   const [screenings, setScreenings] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [idToDelete, setIdToDelete] = useState<number | null>(null); // Stan dla modala potwierdzenia
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [message, setMessage] = useState<{
     text: string;
     isError: boolean;
   } | null>(null);
+
+  // 1. Synchronizacja blokady scrolla tła
+  useEffect(() => {
+    if (idToDelete !== null || isCreateOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [idToDelete, isCreateOpen]);
 
   const fetchScreenings = async () => {
     if (!token) return;
@@ -45,17 +67,22 @@ export const Screenings: React.FC = () => {
     fetchScreenings();
   }, [token]);
 
-  const handleDelete = async (id: number) => {
-    if (!token) return;
+  // 2. Logika właściwego usuwania po potwierdzeniu w modalu
+  const handleDelete = async () => {
+    if (!token || idToDelete === null) return;
+    const id = idToDelete;
     setDeletingId(id);
+
     try {
       const res = await fetch(`${API_URL}/api/screening/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) throw new Error("Delete failed");
+
       setScreenings((prev) => prev.filter((s) => s.id !== id));
       setMessage({ text: "Screening successfully removed", isError: false });
+      setIdToDelete(null); // Zamknij modal po sukcesie
     } catch (err: any) {
       setMessage({ text: "Error during deletion", isError: true });
     } finally {
@@ -64,11 +91,12 @@ export const Screenings: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen  bg-[#050505] text-white selection:bg-pink-500/40 font-sans mt-20">
+    <div className="min-h-screen bg-[#050505] text-white selection:bg-pink-500/40 font-sans mt-20">
       <Navbar />
       <LaserBackground />
 
       <main className="max-w-[1800px] mx-auto px-6 pt-32 pb-20 relative z-10">
+        {/* HEADER SECTION */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 px-4">
           <div className="space-y-4">
             <div className="flex items-center gap-4">
@@ -107,6 +135,7 @@ export const Screenings: React.FC = () => {
           )}
         </div>
 
+        {/* MESSAGES */}
         <AnimatePresence>
           {message && (
             <motion.div
@@ -116,11 +145,7 @@ export const Screenings: React.FC = () => {
               className="px-4 mb-10"
             >
               <div
-                className={`flex items-center justify-between p-5 rounded-3xl border-2 backdrop-blur-md ${
-                  message.isError
-                    ? "bg-red-500/5 border-red-500/30 text-red-400"
-                    : "bg-pink-500/5 border-pink-500/30 text-pink-400"
-                }`}
+                className={`flex items-center justify-between p-5 rounded-3xl border-2 backdrop-blur-md ${message.isError ? "bg-red-500/5 border-red-500/30 text-red-400" : "bg-pink-500/5 border-pink-500/30 text-pink-400"}`}
               >
                 <div className="flex items-center gap-3">
                   <div
@@ -141,6 +166,7 @@ export const Screenings: React.FC = () => {
           )}
         </AnimatePresence>
 
+        {/* MAIN CONTENT */}
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-40 gap-6">
             <div className="relative">
@@ -177,11 +203,10 @@ export const Screenings: React.FC = () => {
                   visible: { opacity: 1, y: 0 },
                 }}
                 whileHover={{ y: -5 }}
-                className="relative"
               >
                 <ScreeningCard
                   screening={s}
-                  onDelete={handleDelete}
+                  onDelete={(id) => setIdToDelete(id)} // Otwiera modal zamiast usuwać od razu
                   isDeleting={deletingId === s.id}
                 />
               </motion.div>
@@ -189,6 +214,7 @@ export const Screenings: React.FC = () => {
           </motion.div>
         )}
 
+        {/* MODAL: CREATE SCREENING */}
         <AnimatePresence>
           {isCreateOpen && (
             <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
@@ -199,7 +225,6 @@ export const Screenings: React.FC = () => {
                 onClick={() => setIsCreateOpen(false)}
                 className="absolute inset-0 bg-black/95 backdrop-blur-xl"
               />
-
               <motion.div
                 initial={{ opacity: 0, scale: 0.9, y: 40 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -214,17 +239,74 @@ export const Screenings: React.FC = () => {
                   }}
                   whileTap={{ scale: 0.9 }}
                   onClick={() => setIsCreateOpen(false)}
-                  className="absolute top-5 right-5 z-[130] p-3 rounded-3xl bg-red-600 text-white shadow-[0_10px_20px_rgba(220,38,38,0.4)]  transition-all"
+                  className="absolute top-5 right-5 z-[130] p-3 rounded-3xl bg-red-600 text-white shadow-[0_10px_20px_rgba(220,38,38,0.4)] transition-all"
                 >
                   <X className="w-4 h-4 stroke-[3px]" />
                 </motion.button>
-
                 <CreateScreeningForm
                   onCreated={async () => {
                     await fetchScreenings();
                     setIsCreateOpen(false);
                   }}
                 />
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
+
+        {/* MODAL: CONFIRM DELETE */}
+        <AnimatePresence>
+          {idToDelete !== null && (
+            <div className="fixed inset-0 z-[200] flex items-center justify-center p-6">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => !deletingId && setIdToDelete(null)}
+                className="absolute inset-0 bg-black/90 backdrop-blur-md"
+              />
+
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9, y: 40 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: 40 }}
+                className="relative z-[210] w-full max-w-md bg-zinc-950 border border-white/10 rounded-[40px] p-8 shadow-2xl text-center"
+              >
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-red-500 to-transparent" />
+
+                <div className="mb-6 inline-flex p-4 rounded-3xl bg-red-500/10 border border-red-500/20">
+                  <AlertTriangle className="w-8 h-8 text-red-500" />
+                </div>
+
+                <h2 className="text-2xl font-black uppercase italic tracking-tighter mb-2">
+                  Confirm <span className="text-red-500">Deletion</span>
+                </h2>
+
+                <p className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em] mb-8 leading-loose">
+                  Are you sure you want to remove this screening? This process
+                  cannot be undone.
+                </p>
+
+                <div className="flex gap-4">
+                  <button
+                    disabled={!!deletingId}
+                    onClick={() => setIdToDelete(null)}
+                    className="flex-1 py-4 rounded-2xl bg-zinc-900 text-zinc-500 font-black uppercase text-[10px] tracking-widest hover:text-white transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    disabled={!!deletingId}
+                    onClick={handleDelete}
+                    className="flex-1 py-4 rounded-2xl bg-red-600 text-white font-black uppercase text-[10px] tracking-widest hover:bg-red-500 shadow-[0_10px_20px_-5px_rgba(220,38,38,0.5)] transition-all flex items-center justify-center gap-2"
+                  >
+                    {deletingId ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      "Delete Now"
+                    )}
+                  </button>
+                </div>
               </motion.div>
             </div>
           )}
