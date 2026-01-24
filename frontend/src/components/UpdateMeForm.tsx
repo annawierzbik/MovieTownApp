@@ -35,7 +35,7 @@ export const UpdateMeForm = () => {
     if (!token) return;
     const fetchProfile = async () => {
       try {
-        const res = await fetch(`${API_URL}//api/user/me`, {
+        const res = await fetch(`${API_URL}/api/user/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!res.ok) throw new Error("Session expired");
