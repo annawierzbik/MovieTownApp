@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace MovieTown.Models
 {
@@ -14,6 +15,7 @@ namespace MovieTown.Models
 
         [Required]
         public int MovieId { get; set; }
+        [JsonIgnore]
         public Movie Movie { get; set; } 
 
         [Required]

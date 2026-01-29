@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace MovieTown.Models
 {
@@ -8,6 +9,7 @@ namespace MovieTown.Models
 
         [Required]
         public int ScreeningId { get; set; }
+        [JsonIgnore]
         public Screening Screening { get; set; }
 
         [Required]
