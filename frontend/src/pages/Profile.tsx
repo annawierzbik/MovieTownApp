@@ -13,4 +13,3 @@ export const Profile = () => {
     </div>
   );
 };
-s;
