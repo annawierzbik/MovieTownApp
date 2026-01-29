@@ -58,19 +58,23 @@ Used by Docker Compose to set up infrastructure.
 Used by React to connect to the API.
 - `REACT_APP_API_URL`: URL of your running backend (e.g., `http://localhost:5000` for local dev or your Render URL).
 
-### Installation & Local Setup
+### Installation & Local Setup (Windows)
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/annawierzbik/MovieTownApp.git
    cd MovieTownApp
    
-2. **Run Application (Docker):**
+2. **Build Application (Docker):**
    ```bash
-     docker-compose up -d
+     docker-compose up --build
+
+3. **Run Application**
+   ```bash
+      cd \backend\bin\Release\net9.0\win-x64\publish
+      .\Cinema.Api.exe
 
 3. **Access Application at:**
-- Frontend: http://localhost
-- Backend: http://localhost/api
+- http://localhost:5000
 
   
 ## 🌐 Deployment
