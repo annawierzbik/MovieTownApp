@@ -61,7 +61,7 @@ Used by React to connect to the API.
 ### Installation & Local Setup
 1. **Clone the repository:**
    ```bash
-   git clone [https://github.com/annawierzbik/MovieTownApp.git](https://github.com/annawierzbik/MovieTownApp.git)
+   git clone https://github.com/annawierzbik/MovieTownApp.git
    cd MovieTownApp
    
 2. **Run Application (Docker):**
@@ -76,7 +76,7 @@ Used by React to connect to the API.
 ## 🌐 Deployment
 The application is fully deployed and can be accessed via the following link:
 
-Live Frontend: https://movie-town-frontend.onrender.com
+Live: https://movie-town-frontend.onrender.com
 
 ## 📝 Author
 Anna Wierzbik Developed as a final project for the "Narzędzia Typu RAD" course.
