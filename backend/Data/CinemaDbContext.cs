@@ -9,20 +9,18 @@ public class CinemaDbContext : DbContext
     }
 
     public DbSet<User> Users => Set<User>();
-    public DbSet<Movie> Movies => Set<Movie>(); // Nowy DbSet
+    public DbSet<Movie> Movies => Set<Movie>();
     public DbSet<Cinema> Cinemas => Set<Cinema>();
     public DbSet<Screening> Screenings => Set<Screening>();
     public DbSet<Reservation> Reservations => Set<Reservation>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        // To wyłącza błąd, który blokuje Ci update
         optionsBuilder.ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning));
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // Unikalność miejsc w rezerwacjach
         modelBuilder.Entity<Reservation>()
             .HasIndex(r => new { r.ScreeningId, r.Row, r.Seat })
             .IsUnique();
@@ -38,14 +36,12 @@ public class CinemaDbContext : DbContext
     .WithMany(u => u.Reservations)
     .HasForeignKey(r => r.UserId);
 
-        // Obsługa współbieżności dla PostgreSQL (xmin)
         modelBuilder.Entity<User>()
             .Property(u => u.xmin)
             .HasColumnType("xid")
             .IsConcurrencyToken()
             .ValueGeneratedOnAddOrUpdate();
 
-        // SEED DATA: KINA
         modelBuilder.Entity<Cinema>().HasData(
             new Cinema { Id = 1, Name = "Cinema Warszawa", Rows = 8, SeatsPerRow = 10 },
             new Cinema { Id = 2, Name = "Cinema Lublin", Rows = 12, SeatsPerRow = 14 }
